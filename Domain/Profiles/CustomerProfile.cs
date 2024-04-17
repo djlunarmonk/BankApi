@@ -9,6 +9,8 @@ namespace BankApi.Domain.Profiles
         public CustomerProfile()
         {
             CreateMap<Customer, CustomerDTO>().ReverseMap();
+
+            CreateMap<CustomerNewDTO, Customer>();
         }
 
 
