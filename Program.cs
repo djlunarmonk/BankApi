@@ -26,10 +26,12 @@ builder.Services.AddIdentityApiEndpoints<AppUser>()
 
 
 builder.Services.AddTransient<ICustomerRepo, CustomerRepo>();
+builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 
 // DI for service layer
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 
 builder.Services.AddControllers();

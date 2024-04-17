@@ -1,4 +1,5 @@
 ﻿using BankApi.Core.Interfaces;
+using BankApi.Domain.DTO;
 using BankApi.Domain.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -8,7 +9,7 @@ namespace BankApi.Controllers
 {
 
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class AdminController : ControllerBase
     {
         private readonly ICustomerService _service;
@@ -23,33 +24,28 @@ namespace BankApi.Controllers
         }
 
 
-        [Route("/admin/allcustomers")]
-        [Authorize(Roles = "Admin")]
+        [Route("/Admin/allcustomers")]
         [HttpGet]
-        public async Task<IActionResult> NewCustomer()
+        public async Task<IActionResult> AllCustomers()
         {
             var answer = await _service.GetAllCustomers();
             if (answer == null) { return BadRequest("Nope."); }
 
-            //bool x = await _roleManager.RoleExistsAsync("Admin");
-            //if (!x)
-            //{
-            //    // first we create Admin role   
-            //    var role = new IdentityRole();
-            //    role.Name = "Admin";
-            //    await _roleManager.CreateAsync(role);
-            //}
-            ////Then we create a user 
-            //var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            //if (user != null)
-            //{
-            //    var result = await _userManager.AddToRoleAsync(user, "Admin");
-            //}
+            return Ok(answer);
+        }
 
+        [Route("/Admin/NewCustomer")]
+        [HttpPost]
+        public async Task<IActionResult> NewCustomer(CustomerNewDTO newCustomer)
+        {
+            if (newCustomer == null) { return BadRequest("Invalid input."); }
 
-            //var userRole = User.FindFirstValue(ClaimTypes.Role);
-            //if (userRole != null) await Console.Out.WriteAsync(userRole.ToString());
+            var answer = await _service.CreateCustomer(newCustomer);
+
+            if (answer == null) { return BadRequest("Error in service."); }
+
+            // Not great, maybe? Should be a better way, frontend will not be happy?
             return Ok(answer);
         }
     }

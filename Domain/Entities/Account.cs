@@ -4,7 +4,7 @@ public partial class Account
 {
     public int AccountId { get; set; }
 
-    public string Frequency { get; set; } = null!;
+    public string Frequency { get; set; } = "MONTHLY";
 
     public DateOnly Created { get; set; }
 
@@ -19,4 +19,16 @@ public partial class Account
     public virtual ICollection<Loan>? Loans { get; set; } = new List<Loan>();
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+
+    public Account()
+    {
+
+    }
+
+    public Account(bool standard)
+    {
+        Created = DateOnly.FromDateTime(DateTime.UtcNow);
+        Balance = 0;
+        AccountTypesId = standard ? 1 : 2;
+    }
 }
