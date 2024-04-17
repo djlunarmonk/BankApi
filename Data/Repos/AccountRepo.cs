@@ -1,6 +1,7 @@
 ﻿using BankApi.Data.Context;
 using BankApi.Data.Interfaces;
 using BankApi.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace BankApi.Data.Repos
 {
@@ -33,6 +34,16 @@ namespace BankApi.Data.Repos
             {
                 await Console.Out.WriteLineAsync(ex.Message);
             }
+        }
+
+        public async Task<List<Account?>> GetCustomerAccounts(int customerId, bool details = false)
+        {
+            if (!details)
+            {
+                return await _context.Dispositions.Include(disp => disp.Account).ThenInclude(acc => acc.AccountTypes)
+                                        .Where(disp => disp.CustomerId == customerId).Select(disp => disp.Account).ToListAsync();
+            }
+            else return null;
         }
     }
 }
