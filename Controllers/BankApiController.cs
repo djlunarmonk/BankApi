@@ -1,4 +1,5 @@
 ﻿using BankApi.Core.Interfaces;
+using BankApi.Domain.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,15 +29,15 @@ namespace BankApi.Controllers
         // Switched to using built-in Login of Identity Core as it handles cookie
         // with bearer token automagically
 
-        //[Route("/login")]
-        //[AllowAnonymous]
-        //[HttpPost]
-        //public async Task<IActionResult> Login(UserLoginDTO loginDTO)
-        //{
-        //    if (loginDTO == null) { return BadRequest(); }
+        [Route("User/login")]
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Login(UserLoginDTO loginDTO)
+        {
+            if (loginDTO == null) { return BadRequest(); }
 
-        //    else return Ok(loginDTO);
-        //}
+            else return Ok(loginDTO);
+        }
 
     }
 }

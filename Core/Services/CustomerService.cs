@@ -94,24 +94,5 @@ namespace BankApi.Core.Services
             return "Customer created, but cannot be added as AppUser right now.\n" + result.ToString();
         }
 
-        //bool x = await _roleManager.RoleExistsAsync("Admin");
-        //if (!x)
-        //{
-        //    // first we create Admin role   
-        //    var role = new IdentityRole();
-        //    role.Name = "Admin";
-        //    await _roleManager.CreateAsync(role);
-        //}
-        ////Then we create a user 
-        //var user = await .FindByNameAsync(User.Identity.Name);
-
-        //if (user != null)
-        //{
-        //    var result = await .AddToRoleAsync(user, "Admin");
-        //}
-
-
-        //var userRole = User.FindFirstValue(ClaimTypes.Role);
-        //if (userRole != null) await Console.Out.WriteAsync(userRole.ToString());
     }
 }
