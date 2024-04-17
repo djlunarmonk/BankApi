@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+
 builder.Services.AddAutoMapper(typeof(CustomerProfile));
 
 
@@ -20,21 +20,22 @@ builder.Services.AddDbContext<BankAppDataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BankAPIDev")));
 
 builder.Services.AddIdentityApiEndpoints<AppUser>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<BankAppDataContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddTransient<ICustomerRepo, CustomerRepo>();
 
+builder.Services.AddTransient<ICustomerRepo, CustomerRepo>();
 
 // DI for service layer
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 
-// Authentification setup, JWT config
-//builder.Services.AddAuthenticationExtended();
+
+builder.Services.AddControllers();
+
+// Authorization setup for API and Swagger
 builder.Services.AddAuthorization();
-
-
 builder.Services.AddSwaggerGenExtended();
 
 var app = builder.Build();
