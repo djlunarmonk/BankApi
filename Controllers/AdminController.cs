@@ -68,7 +68,7 @@ namespace BankApi.Controllers
             return Ok("Loan granted and issued!");
         }
 
-        [Route("Admin/Account/{accountId}")]
+        [Route("Admin/AccountDetails/{accountId}")]
         [HttpGet]
         public async Task<IActionResult> GetAccountDetails(int accountId)
         {

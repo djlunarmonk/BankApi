@@ -41,7 +41,7 @@ namespace BankApi.Controllers
             return Ok(answer);
         }
 
-        [Route("Customer/Account/{accountId}")]
+        [Route("Customer/AccountDetails/{accountId}")]
         [HttpGet]
         public async Task<IActionResult> GetAccountDetails(int accountId)
         {
@@ -50,7 +50,7 @@ namespace BankApi.Controllers
             return Ok(answer);
         }
 
-        [Route("Customer/Account/new")]
+        [Route("Customer/Account/New")]
         [HttpGet]
         public async Task<IActionResult> NewAccount(bool standardAccount)
         {

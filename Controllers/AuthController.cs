@@ -7,29 +7,18 @@ namespace BankApi.Controllers
 {
     [Authorize]
     [ApiController]
-    public partial class BankApiController : ControllerBase
+    public partial class AuthController : ControllerBase
     {
         private readonly ILoginService _service;
 
-        public BankApiController(ILoginService service)
+        public AuthController(ILoginService service)
         {
 
             _service = service;
         }
 
-        [Route("/logout")]
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> Logout()
-        {
-            if (await _service.Logout()) return Ok("You are logged out!");
-            return BadRequest("Logout error!");
-        }
 
-        // Switched to using built-in Login of Identity Core as it handles cookie
-        // with bearer token automagically
-
-        [Route("User/login")]
+        [Route("Auth/Login")]
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginDTO loginDTO)
@@ -40,5 +29,13 @@ namespace BankApi.Controllers
             else return Unauthorized("Can't login");
         }
 
+        [Route("Auth/Logout")]
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            if (await _service.Logout()) return Ok("You are logged out!");
+            return BadRequest("Logout error!");
+        }
     }
 }
