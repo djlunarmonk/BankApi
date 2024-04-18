@@ -1,0 +1,4 @@
+NOTE: The mock database is not supplied by me, i e you cannot download it here. It was supplied TO me as part of the assignment.
+
+Identity has its own endpoints for making users, login and setting up MFA etc. I was exploring that to some extent, mainly making myself an admin account and using the login.
+I also created a user which I then manually connected to a customer role and assigned to a ready customer in the mock db. However users that had been created via my own admin endpoints could not login using the built-in endpoint for that purpose. I wrote my own login calling SignInManager and that worked for both batches of users. Can't find too much on the subject www wise for now, could be differences in auth setup under the hood - which you might get to or not. Could also be related to auth settings for Swagger. Have you run into this, please let me know?
