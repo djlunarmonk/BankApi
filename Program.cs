@@ -19,10 +19,14 @@ builder.Services.AddAutoMapper(typeof(CustomerProfile));
 builder.Services.AddDbContext<BankAppDataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BankAPIDev")));
 
-builder.Services.AddIdentityApiEndpoints<AppUser>()
-    .AddRoles<IdentityRole>()
+builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<BankAppDataContext>()
     .AddDefaultTokenProviders();
+
+//builder.Services.AddIdentityApiEndpoints<AppUser>()
+//    .AddRoles<IdentityRole>()
+//    .AddEntityFrameworkStores<BankAppDataContext>()
+//    .AddDefaultTokenProviders();
 
 
 builder.Services.AddTransient<ICustomerRepo, CustomerRepo>();
@@ -47,7 +51,7 @@ var app = builder.Build();
 app.UseRouting();
 //app.UseAuthentication();
 app.UseAuthorization();
-app.MapIdentityApi<AppUser>();
+// app.MapIdentityApi<AppUser>();
 app.UseEndpoints(configure: endpoints => endpoints.MapControllers());
 
 app.UseSwagger();
