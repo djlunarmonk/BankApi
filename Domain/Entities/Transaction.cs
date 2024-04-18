@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BankApi.Domain.Entities;
+﻿namespace BankApi.Domain.Entities;
 
 public partial class Transaction
 {
@@ -25,5 +22,5 @@ public partial class Transaction
 
     public string? Account { get; set; }
 
-    public virtual Account AccountNavigation { get; set; } = null!;
+    public virtual Account? AccountNavigation { get; set; } = null;
 }

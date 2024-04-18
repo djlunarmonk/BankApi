@@ -16,7 +16,7 @@ namespace BankApi.Data.Repos
         public async Task<Account> NewAccount(Account account)
         {
             if (account is null) return null;
-            // account.AccountTypes = await _context.AccountTypes.FindAsync(account.AccountTypesId);
+            account.AccountTypes = await _context.AccountTypes.FindAsync(account.AccountTypesId);
 
             _context.Accounts.Add(account);
             await _context.SaveChangesAsync();
@@ -36,14 +36,30 @@ namespace BankApi.Data.Repos
             }
         }
 
-        public async Task<List<Account?>> GetCustomerAccounts(int customerId, bool details = false)
+        public async Task<List<Account?>> GetCustomerAccounts(int customerId)
         {
-            if (!details)
+            try
             {
                 return await _context.Dispositions.Include(disp => disp.Account).ThenInclude(acc => acc.AccountTypes)
                                         .Where(disp => disp.CustomerId == customerId).Select(disp => disp.Account).ToListAsync();
             }
-            else return null;
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<Account?> GetAccountDetails(int accountId)
+        {
+            return await _context.Accounts.Include(acc => acc.Transactions).Include(acc => acc.AccountTypes)
+                                        .Include(acc => acc.Loans).FirstOrDefaultAsync(acc => acc.AccountId == accountId);
+        }
+
+        public async Task<bool> ValidateAccountOwner(int customerId, int accountId)
+        {
+            var disp = await _context.Dispositions.FirstOrDefaultAsync(disp => disp.CustomerId == customerId && disp.AccountId == accountId);
+            if (disp is null) { return false; }
+            return true;
         }
     }
 }

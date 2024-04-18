@@ -5,6 +5,7 @@ using BankApi.Domain.DTO;
 using BankApi.Domain.Entities;
 using BankApi.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace BankApi.Core.Services
 {
@@ -44,8 +45,8 @@ namespace BankApi.Core.Services
             // And did they attach a new password?
             if (string.IsNullOrEmpty(newCustomer.Password)) return "No password given.";
 
-            if (newCustomer.UserName.Any(c => !char.IsAsciiLetterOrDigit(c)))
-            { return "UserName must only contain letters and digits"; }
+            //if (newCustomer.UserName.Any(c => !char.IsAsciiLetterOrDigit(c)))
+            //{ return "UserName must only contain letters and digits"; }
 
             // Is there already a customer with this email address?
             var duplicateCustomers = await _customerRepo.GetCustomerByEmail(newCustomer.Emailaddress);
@@ -53,8 +54,6 @@ namespace BankApi.Core.Services
 
             // Or an AppUser in the Identity db?
             var duplicateAppUsers = await _userManager.FindByEmailAsync(newCustomer.Emailaddress);
-            if (duplicateAppUsers != null) return "Duplicate of AppUser email in database.";
-            duplicateAppUsers = await _userManager.FindByNameAsync(newCustomer.UserName);
             if (duplicateAppUsers != null) return "Duplicate of AppUser email in database.";
 
             // We insert a new Customer
@@ -71,12 +70,19 @@ namespace BankApi.Core.Services
             // Let's make an AppUser
             var newUser = new AppUser()
             {
-                UserName = newCustomer.UserName,
+                UserName = createdCustomer.Emailaddress,
                 Email = createdCustomer.Emailaddress,
-                Customer = createdCustomer
+                CustomerId = createdCustomer.CustomerId
             };
 
             var result = await _userManager.CreateAsync(newUser, newCustomer.Password);
+            var claims = new[]
+            {
+                new Claim("CustomerId", newUser.CustomerId.ToString())
+            };
+
+            await _userManager.AddClaimsAsync(newUser, claims);
+
             if (result.Succeeded)
             {
                 bool roleExists = await _roleManager.RoleExistsAsync("Customer");
@@ -92,6 +98,17 @@ namespace BankApi.Core.Services
                 return answer;
             }
             return "Customer created, but cannot be added as AppUser right now.\n" + result.ToString();
+        }
+
+        public async Task<int> GetCustomerId(ClaimsIdentity? claimsIdentity)
+        {
+            if (claimsIdentity == null) return 0;
+            var customerIdClaim = claimsIdentity.Claims.FirstOrDefault(c => c.Type == "CustomerId");
+            if (customerIdClaim == null) { return -1; }
+
+            int customerId;
+            if (!int.TryParse(customerIdClaim.Value, out customerId)) { return -2; }
+            return customerId;
         }
 
     }

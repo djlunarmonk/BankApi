@@ -34,9 +34,10 @@ namespace BankApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginDTO loginDTO)
         {
-            if (loginDTO == null) { return BadRequest(); }
+            if (loginDTO == null) { return BadRequest("No input!"); }
 
-            else return Ok(loginDTO);
+            if (await _service.Login(loginDTO)) return Ok();
+            else return Unauthorized("Can't login");
         }
 
     }

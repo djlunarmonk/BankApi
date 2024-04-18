@@ -28,7 +28,7 @@ public partial class Account
     public Account(bool standard)
     {
         Created = DateOnly.FromDateTime(DateTime.UtcNow);
-        Balance = 0;
+        Balance = 1000;
         AccountTypesId = standard ? 1 : 2;
     }
 }
