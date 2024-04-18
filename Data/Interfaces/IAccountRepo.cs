@@ -4,8 +4,10 @@ namespace BankApi.Data.Interfaces
 {
     public interface IAccountRepo
     {
-        Task<List<Account?>> GetCustomerAccounts(int customerId, bool details = false);
+        Task<Account?> GetAccountDetails(int accountId);
+        Task<List<Account?>> GetCustomerAccounts(int customerId);
         Task<Account> NewAccount(Account account);
         Task UpdateAccount();
+        Task<bool> ValidateAccountOwner(int customerId, int accountId);
     }
 }
